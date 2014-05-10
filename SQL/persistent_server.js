@@ -5,13 +5,13 @@ var mysql = require('mysql');
 /* You'll need to fill the following out with your mysql username and password.
  * database: "chat" specifies that we're using the database called
  * "chat", which we created by running schema.sql.*/
-var dbConnection = mysql.createConnection({
-  user: "",
+exports.dbConnection = mysql.createConnection({
+  user: "root",
   password: "",
   database: "chat"
 });
 
-dbConnection.connect();
+//dbConnection.connect();
 /* Now you can make queries to the Mysql database using the
  * dbConnection.query() method.
  * See https://github.com/felixge/node-mysql for more details about
