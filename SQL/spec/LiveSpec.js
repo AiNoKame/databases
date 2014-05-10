@@ -18,7 +18,7 @@ describe("Persistent Node Chat Server", function() {
     });
     dbConnection.connect();
 
-    var tablename = "messages";
+    var tablename = "shortmessages";
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
@@ -33,19 +33,17 @@ describe("Persistent Node Chat Server", function() {
     // Post a message to the node chat server:
     request({method: "POST",
              uri: "http://127.0.0.1:3000/messages", //where to send
-             form: {messageID: 0,
-              username: "Valjean",
-              text: "In mercy's name, three days is all I need.",
-              roomname: 'beehouse',
-              createdAt: '1000-01-01 00:00:00'}
+             form: {username: "Valjean",
+              text: "In mercy's name, three days is all I need."}
             },
             function(error, response, body) {
               /* Now if we look in the database, we should find the
                * posted message there. */
-              // 0, 'apple', 'red', 'beehouse', '1000-01-01 00:00:00'
-              var form = response.request.body.toString().split('&');
+              dbConnection.query('SELECT * FROM shortmessages', function(err, results) {
+                console.log(results);
+              });
 
-              var queryString = "select * from messages";//**************************
+              var queryString = "select * from shortmessages";
               var queryArgs = [];
               /* TODO: Change the above queryString & queryArgs to match your schema design
                * The exact query string and query args to use
