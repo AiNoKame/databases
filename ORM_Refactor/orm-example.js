@@ -4,14 +4,18 @@
  */
 
 var Sequelize = require("sequelize");
-var sequelize = new Sequelize("chat", "bacon", "pass");
+var sequelize = new Sequelize("chat", "root", "");
 /* TODO this constructor takes the database name, username, then password.
  * Modify the arguments if you need to */
 
 /* first define the data structure by giving property names and datatypes
  * See http://sequelizejs.com for other datatypes you can use besides STRING. */
 var User = sequelize.define('User', {
-  user_name: Sequelize.STRING,
+  messageID: {type: Sequelize.INTEGER, autoincrement: true},
+  username: Sequelize.STRING,
+  text: Sequelize.TEXT,
+  roomname: Sequelize.STRING,
+  createdAt: Sequelize.DATE
 });
 
 /* .sync() makes Sequelize create the database table for us if it doesn't
@@ -20,16 +24,17 @@ User.sync().success(function() {
   /* This callback function is called once sync succeeds. */
 
   // now instantiate an object and save it:
-  var newUser = User.build({user_name: "Jean Valjean"});
+  var newUser = User.build({messageID: 0, username: "Jean Valjean", text: 'jellybean', roomname: 'whatever you...give it', createdAt: '0000-00-00 00:00:00'});
   newUser.save().success(function() {
 
     /* This callback function is called once saving succeeds. */
 
     // Retrieve objects from the database:
-    User.findAll({ where: {user_name: "Jean Valjean"} }).success(function(usrs) {
+    User.findAll({ where: {username: "Jean Valjean"} }).success(function(usrs) {
       // This function is called back with an array of matches.
+      console.log(usrs);
       for (var i = 0; i < usrs.length; i++) {
-        console.log(usrs[i].user_name + " exists");
+        console.log(usrs[i].username + " exists");
       }
     });
   });
