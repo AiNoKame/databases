@@ -2,7 +2,10 @@
 var http = require("http");
 var handleRequest = require("../server/request-handler").handleRequest;
 var url = require("url");
-var persistentServer = require('../SQL/persistent_server');
+// Refactored out for ORM
+//var persistentServer = require('../SQL/persistent_server');
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize('chat', 'root', '');
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -11,8 +14,14 @@ var defaultCorsHeaders = {
   // Previously in handleRequest function...
   "Content-Type": "JSON/application"
 };
-
-persistentServer.dbConnection.connect();
+var sequelizedMessages = sequelize.define('sequelizedMessages', {
+  messageID: {type: Sequelize.INTEGER, autoincrement: true},
+  username: Sequelize.STRING,
+  text: Sequelize.TEXT,
+  roomname: Sequelize.STRING,
+  createdAt: Sequelize.DATE
+});
+//persistentServer.dbConnection.connect();
 
 /* Every server needs to listen on a port with a unique number. The
  * standard port for HTTP servers is port 80, but that port is
@@ -44,7 +53,7 @@ var router = {
 var server = http.createServer(function(request, response){
   var path = url.parse(request.url, true);
   if(router[path.pathname]){
-    router[path.pathname](request, response, path.query.order);
+    router[path.pathname](request, response, sequelizedMessages, path.query.order); // handleRequest()
   } else {
     response.writeHead(404, defaultCorsHeaders);
     response.end('404');

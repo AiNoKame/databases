@@ -18,7 +18,7 @@ var app = {};
     app.fetch();
     setInterval(app.fetch, 1000);
     app.username = parseQueryString(window.location.search).username;
-    app.roomname = undefined; // start off in a nameless room
+    app.roomname = ''; // start off in a nameless room
     app.friends = {}; // {"friend name": true}
     $('.currentRoom').text(app.roomname || 'all messages');
 
@@ -52,7 +52,7 @@ var app = {};
     $('.roomSelect').on('click', '.roomname', function(event) {
       event.preventDefault();
       if ($(this).hasClass('showAll')) {
-        app.roomname = undefined; // nameless room shows all messages
+        app.roomname = ''; // nameless room shows all messages
       } else {
         app.roomname = $(this).text();
       }
